@@ -1,0 +1,5 @@
+# stubtest allowlist for django-modelcluster-stubs
+
+# TAGGIT_VERSION is re-exported via wildcard import from modelcluster.contrib.taggit
+# which itself imports it from taggit. Not part of the modelcluster public API.
+modelcluster.tags.TAGGIT_VERSION

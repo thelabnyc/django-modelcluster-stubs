@@ -1,0 +1,70 @@
+- case: clusterable_model_subclass
+  mypy_config: |
+    [mypy]
+    plugins =
+      mypy_django_plugin.main
+    [mypy.plugins.django-stubs]
+    django_settings_module = tests.mypy_test_settings
+  main: |
+    from modelcluster.models import ClusterableModel
+    from django.db import models
+
+    class MyModel(ClusterableModel):
+        name = models.CharField(max_length=255)
+
+    obj = MyModel(name="test")
+    reveal_type(obj.name)  # N: Revealed type is "builtins.str"
+    json_str: str = obj.to_json()
+
+- case: parental_key_usage
+  mypy_config: |
+    [mypy]
+    plugins =
+      mypy_django_plugin.main
+    [mypy.plugins.django-stubs]
+    django_settings_module = tests.mypy_test_settings
+  main: |
+    from modelcluster.fields import ParentalKey
+    from modelcluster.models import ClusterableModel
+    from django.db import models
+
+    class ParentModel(ClusterableModel):
+        name = models.CharField(max_length=255)
+
+    class ChildModel(models.Model):
+        parent = ParentalKey(ParentModel, related_name="children", on_delete=models.CASCADE)
+        value = models.IntegerField()
+
+- case: fake_queryset_operations
+  mypy_config: |
+    [mypy]
+    plugins =
+      mypy_django_plugin.main
+    [mypy.plugins.django-stubs]
+    django_settings_module = tests.mypy_test_settings
+  main: |
+    from modelcluster.queryset import FakeQuerySet
+    from django.db import models
+
+    class Item(models.Model):
+        name = models.CharField(max_length=100)
+
+    qs = FakeQuerySet(Item, [])
+    count: int = qs.count()
+    exists: bool = qs.exists()
+    filtered = qs.filter(name="test")
+    ordered = qs.order_by("name")
+
+- case: cluster_form_usage
+  mypy_config: |
+    [mypy]
+    plugins =
+      mypy_django_plugin.main
+    [mypy.plugins.django-stubs]
+    django_settings_module = tests.mypy_test_settings
+  main: |
+    from modelcluster.forms import ClusterForm, ClusterFormOptions, ClusterFormMetaclass
+    from modelcluster.forms import childformset_factory, BaseChildFormSet
+    from django.db import models
+
+    reveal_type(ClusterForm.formsets)  # N: Revealed type is "builtins.dict[builtins.str, modelcluster.forms.BaseChildFormSet]"
