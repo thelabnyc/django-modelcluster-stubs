@@ -1,5 +1,6 @@
 from typing import Any
 
+from django.core import checks
 from django.db.models import Model
 from django.db.models.fields.related import (
     ForeignKey,
@@ -22,7 +23,7 @@ class ChildObjectsDescriptor(ReverseManyToOneDescriptor):
 class ParentalKey(ForeignKey):
     related_accessor_class: type[ChildObjectsDescriptor]
     def __init__(self, *args: Any, **kwargs: Any) -> None: ...
-    def check(self, **kwargs: Any) -> list[Any]: ...
+    def check(self, **kwargs: Any) -> list[checks.CheckMessage]: ...
 
 def create_deferring_forward_many_to_many_manager(
     rel: Any, original_manager_cls: type
