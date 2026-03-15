@@ -9,6 +9,6 @@ import django
 
 django.setup()
 
-from mypy.stubtest import main
+from mypy.stubtest import main  # noqa: E402
 
 sys.exit(main())
