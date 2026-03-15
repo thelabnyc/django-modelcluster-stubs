@@ -1,14 +1,21 @@
 from typing import Any
 
 from django.db.models import Model
+from django.db.models.fields.related import ForeignKey
+from django.db.models.query import QuerySet
 from django.forms import Media
 from django.forms.models import (
     BaseModelFormSet,
     ModelForm,
     ModelFormMetaclass,
     ModelFormOptions,
+    _FormFieldCallback,
+    _Widgets,
 )
+from django.forms.utils import _DataT, _FilesT
 from django.utils.safestring import SafeString
+
+from modelcluster.queryset import FakeQuerySet
 
 class BaseTransientModelFormSet(BaseModelFormSet):
     changed_objects: list[tuple[Model, list[str]]]
@@ -22,16 +29,16 @@ def transientmodelformset_factory(
 ) -> type[BaseTransientModelFormSet]: ...
 
 class BaseChildFormSet(BaseTransientModelFormSet):
-    fk: Any
+    fk: ForeignKey
     inherit_kwargs: list[str] | None
     instance: Model
     rel_name: str
     def __init__(
         self,
-        data: Any | None = None,
-        files: Any | None = None,
+        data: _DataT | None = None,
+        files: _FilesT | None = None,
         instance: Model | None = None,
-        queryset: Any | None = None,
+        queryset: FakeQuerySet | QuerySet[Model] | None = None,
         **kwargs: Any,
     ) -> None: ...
     def save(self, commit: bool = True) -> list[Model]: ...
@@ -51,8 +58,8 @@ def childformset_factory(
     can_delete: bool = True,
     max_num: int | None = None,
     validate_max: bool = False,
-    formfield_callback: Any | None = None,
-    widgets: dict[str, Any] | None = None,
+    formfield_callback: _FormFieldCallback | None = None,
+    widgets: _Widgets | None = None,
     min_num: int | None = None,
     validate_min: bool = False,
     inherit_kwargs: list[str] | None = None,
@@ -63,7 +70,7 @@ def childformset_factory(
 class ClusterFormOptions(ModelFormOptions):
     formsets: dict[str, Any] | list[str] | None
     exclude_formsets: list[str] | None
-    def __init__(self, options: Any | None = None) -> None: ...
+    def __init__(self, options: type | None = None) -> None: ...
 
 class ClusterFormMetaclass(ModelFormMetaclass):
     extra_form_count: int
@@ -77,8 +84,8 @@ class ClusterForm(ModelForm, metaclass=ClusterFormMetaclass):
     formsets: dict[str, BaseChildFormSet]
     def __init__(
         self,
-        data: Any | None = None,
-        files: Any | None = None,
+        data: _DataT | None = None,
+        files: _FilesT | None = None,
         instance: Model | None = None,
         prefix: str | None = None,
         **kwargs: Any,

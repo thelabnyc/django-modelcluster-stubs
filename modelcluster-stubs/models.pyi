@@ -38,17 +38,17 @@ class ClusterableModel(models.Model):
         target: ClusterableModel,
         commit: bool = False,
         append: bool = False,
-    ) -> dict[tuple[Any, Any], Any]: ...
+    ) -> dict[tuple[ForeignObjectRel, Any], Model | list[Model]]: ...
     def copy_all_child_relations(
         self,
         target: ClusterableModel,
         exclude: list[str] | None = None,
         commit: bool = False,
         append: bool = False,
-    ) -> dict[tuple[Any, Any], Any]: ...
+    ) -> dict[tuple[ForeignObjectRel, Any], Model | list[Model]]: ...
     def copy_cluster(
         self, exclude_fields: list[str] | None = None
-    ) -> tuple[Self, dict[tuple[Any, Any], Any]]: ...
+    ) -> tuple[Self, dict[tuple[ForeignObjectRel, Any], Model | list[Model]]]: ...
 
     class Meta:
         abstract: bool

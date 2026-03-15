@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from typing import Any
 
 from django.db.models import Field, Model
@@ -24,4 +25,4 @@ def extract_field_value(
     suppress_fielddoesnotexist: bool = False,
     suppress_nullrelationshipvalueencountered: bool = False,
 ) -> Any: ...
-def sort_by_fields(items: list[Any], fields: tuple[str, ...] | list[str]) -> None: ...
+def sort_by_fields(items: list[Model], fields: Sequence[str]) -> None: ...
