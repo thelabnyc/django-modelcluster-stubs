@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-modelcluster-stubs"
-version = "6.4.0"
+version = "6.4.0a1"
 description = "PEP 561 type stubs for django-modelcluster"
 readme = "README.md"
 license = { text = "ISC" }
