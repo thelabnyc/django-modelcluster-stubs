@@ -3,7 +3,6 @@ from typing import Any, Self
 from django.db import models
 from django.db.models import Field, Model
 from django.db.models.fields.related import ForeignObjectRel
-
 from modelcluster.fields import ParentalManyToManyField
 
 def get_field_value(field: Field[Any, Any], model: Model) -> Any: ...
@@ -29,9 +28,7 @@ class ClusterableModel(models.Model):
         cls, data: dict[str, Any], check_fks: bool = True, strict_fks: bool = False
     ) -> Self | None: ...
     @classmethod
-    def from_json(
-        cls, json_data: str, check_fks: bool = True, strict_fks: bool = False
-    ) -> Self | None: ...
+    def from_json(cls, json_data: str, check_fks: bool = True, strict_fks: bool = False) -> Self | None: ...
     def copy_child_relation(
         self,
         child_relation: str | ForeignObjectRel,

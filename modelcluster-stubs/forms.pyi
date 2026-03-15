@@ -14,7 +14,6 @@ from django.forms.models import (
 )
 from django.forms.utils import _DataT, _FilesT
 from django.utils.safestring import SafeString
-
 from modelcluster.queryset import FakeQuerySet
 
 class BaseTransientModelFormSet(BaseModelFormSet):
@@ -76,9 +75,7 @@ class ClusterFormMetaclass(ModelFormMetaclass):
     extra_form_count: int
     @classmethod
     def child_form(cls) -> type[ClusterForm]: ...
-    def __new__(
-        cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any]
-    ) -> type: ...
+    def __new__(cls, name: str, bases: tuple[type, ...], attrs: dict[str, Any]) -> type: ...
 
 class ClusterForm(ModelForm, metaclass=ClusterFormMetaclass):
     formsets: dict[str, BaseChildFormSet]
