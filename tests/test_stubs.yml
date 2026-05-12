@@ -13,7 +13,7 @@
         name = models.CharField(max_length=255)
 
     obj = MyModel(name="test")
-    reveal_type(obj.name)  # N: Revealed type is "builtins.str"
+    reveal_type(obj.name)  # N: Revealed type is "str"
     json_str: str = obj.to_json()
 
 - case: parental_key_usage
@@ -54,6 +54,9 @@
     exists: bool = qs.exists()
     filtered = qs.filter(name="test")
     ordered = qs.order_by("name")
+    empty = qs.none()
+    reveal_type(empty)  # N: Revealed type is "modelcluster.queryset.FakeQuerySet"
+    reveal_type(qs.totally_ordered)  # N: Revealed type is "bool"
 
 - case: cluster_form_usage
   mypy_config: |
@@ -67,4 +70,11 @@
     from modelcluster.forms import childformset_factory, BaseChildFormSet
     from django.db import models
 
-    reveal_type(ClusterForm.formsets)  # N: Revealed type is "builtins.dict[builtins.str, modelcluster.forms.BaseChildFormSet]"
+    reveal_type(ClusterForm.formsets)  # N: Revealed type is "dict[str, modelcluster.forms.BaseChildFormSet]"
+
+    class ParentForm(ClusterForm):
+        def save_cluster_m2m(self) -> None:
+            super().save_cluster_m2m()
+
+        def _save_m2m(self) -> None:
+            super()._save_m2m()
